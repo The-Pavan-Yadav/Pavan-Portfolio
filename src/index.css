@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10;
+  }
+  .glass-card {
+    @apply bg-slate-900/50 backdrop-blur-md border border-white/5 hover:border-purple-500/30 transition-all duration-500 shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  }
+  .neon-text-blue {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  .neon-text-purple {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 6s ease infinite;
+  }
+  .text-glow {
+    text-shadow: 0 0 20px currentColor;
+  }
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: left center;
+  }
+  50% {
+    background-position: right center;
+  }
+  100% {
+    background-position: left center;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+@layer utilities {
+  .text-glow-subtle {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(500px); }
+  100% { transform: translateY(-100%); }
+}
+
+body {
+  @apply bg-[#050505] text-slate-50 selection:bg-purple-500/30 selection:text-white font-sans;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
