@@ -15,8 +15,11 @@ export const Starfield = () => {
     const stars: {x: number, y: number, r: number, a: number, v: number}[] = [];
     const meteors: {x: number, y: number, l: number, v: number, a: number}[] = [];
 
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? 40 : 160;
+
     // Initialize stars
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < starCount; i++) {
         stars.push({
             x: Math.random() * w, 
             y: Math.random() * h, 
@@ -36,14 +39,20 @@ export const Starfield = () => {
             star.a += star.v;
             if (star.a > 1 || star.a < 0) star.v = -star.v;
             
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.a) * 0.35})`;
-            ctx.fill();
+            
+            // Fast rectangle render for performance on mobile/all devices instead of expensive arc curves
+            if (star.r < 1.0) {
+                ctx.fillRect(star.x, star.y, 1.5, 1.5);
+            } else {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
         });
 
-        // Generate meteors occasionally
-        if (Math.random() < 0.003 && meteors.length < 2) {
+        // Generate meteors occasionally (disabled on mobile for 60fps feel)
+        if (!isMobile && Math.random() < 0.003 && meteors.length < 2) {
             meteors.push({
                 x: Math.random() * w + w/2,
                 y: -50,
@@ -54,28 +63,30 @@ export const Starfield = () => {
         }
 
         // Render meteors
-        for (let i = meteors.length - 1; i >= 0; i--) {
-            const m = meteors[i];
-            m.x -= m.v;
-            m.y += m.v;
-            m.a -= 0.01;
+        if (!isMobile) {
+            for (let i = meteors.length - 1; i >= 0; i--) {
+                const m = meteors[i];
+                m.x -= m.v;
+                m.y += m.v;
+                m.a -= 0.01;
 
-            if (m.a <= 0 || m.x < -200 || m.y > h + 200) {
-                meteors.splice(i, 1);
-                continue;
+                if (m.a <= 0 || m.x < -200 || m.y > h + 200) {
+                    meteors.splice(i, 1);
+                    continue;
+                }
+
+                const grad = ctx.createLinearGradient(m.x, m.y, m.x + m.l, m.y - m.l);
+                grad.addColorStop(0, `rgba(255, 255, 255, ${m.a})`);
+                grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                ctx.beginPath();
+                ctx.moveTo(m.x, m.y);
+                ctx.lineTo(m.x + m.l, m.y - m.l);
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 1;
+                ctx.lineCap = 'round';
+                ctx.stroke();
             }
-
-            const grad = ctx.createLinearGradient(m.x, m.y, m.x + m.l, m.y - m.l);
-            grad.addColorStop(0, `rgba(255, 255, 255, ${m.a})`);
-            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-            ctx.beginPath();
-            ctx.moveTo(m.x, m.y);
-            ctx.lineTo(m.x + m.l, m.y - m.l);
-            ctx.strokeStyle = grad;
-            ctx.lineWidth = 1;
-            ctx.lineCap = 'round';
-            ctx.stroke();
         }
 
         animationFrame = requestAnimationFrame(render);

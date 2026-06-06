@@ -110,13 +110,15 @@ const colorThemes: Record<string, any> = {
 };
 
 const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: (id: string | null) => void; idx: number }> = ({ skill, activeId, setActiveId, idx }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const isActive = activeId === skill.id;
   const theme = colorThemes[skill.themeColor];
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    if (window.innerWidth < 768) return; // Skip custom glow movement on mobile
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
   };
 
   // Determine glow color based on theme
@@ -140,30 +142,31 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: idx * 0.1 }}
       onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden cursor-pointer rounded-2xl md:rounded-3xl border p-4 sm:p-5 md:p-6 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] hover:-translate-y-2 md:hover:-translate-y-3 shadow-[0_8px_30px_rgba(0,0,0,0.5)] ${
+      className={`group relative overflow-hidden cursor-pointer rounded-2xl md:rounded-3xl border p-4 sm:p-5 md:p-6 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] md:hover:-translate-y-3 shadow-[0_8px_30px_rgba(0,0,0,0.5)] ${
         isActive 
           ? theme.activeCardBorder 
-          : "bg-[#08080c]/50 backdrop-blur-2xl border-white/[0.04] hover:bg-[#08080c]/70 hover:border-white/[0.08]"
+          : "bg-[#08080c]/50 backdrop-blur-2xl border-white/[0.04] md:hover:bg-[#08080c]/70 md:hover:border-white/[0.08]"
       }`}
+      style={{ willChange: "transform" }}
     >
       {/* Mouse tracking glow */}
       <div 
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 mix-blend-screen"
+        className="absolute inset-0 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 mix-blend-screen"
         style={{
-          background: `radial-gradient(circle 250px at ${mousePos.x}px ${mousePos.y}px, ${getGlowColor()}, transparent 70%)`
+          background: `radial-gradient(circle 250px at var(--mouse-x, 0px) var(--mouse-y, 0px), ${getGlowColor()}, transparent 70%)`
         }}
       />
       
       {/* Dynamic Border Glow */}
       <div className={`absolute inset-0 border border-transparent rounded-3xl transition-colors duration-700 pointer-events-none z-30 ${
-        isActive ? 'border-transparent' : `group-hover:border-${skill.themeColor}-500/30`
+        isActive ? 'border-transparent' : `md:group-hover:border-${skill.themeColor}-500/30`
       }`} />
 
       {/* Subtle inner radial background on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Futuristic scanning line animation inside card */}
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-y-full group-hover:animate-[scan_3s_ease-in-out_infinite] opacity-0 group-hover:opacity-100 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-y-full md:group-hover:animate-[scan_3s_ease-in-out_infinite] opacity-0 md:group-hover:opacity-100 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
 
       <div className="flex flex-col sm:flex-row items-center sm:justify-between z-10 relative gap-3 sm:gap-0">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-5 text-center sm:text-left">

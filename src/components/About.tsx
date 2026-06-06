@@ -11,13 +11,13 @@ const FeatureCard: React.FC<{ item: any; idx: number }> = ({ item, idx }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: 0.6 + (idx * 0.1), ease: "easeOut" }}
-      className={`relative bg-[#08080c]/70 backdrop-blur-xl border border-white/[0.04] rounded-2xl md:rounded-[1.25rem] p-6 flex flex-col items-center justify-center text-center gap-3 transition-all duration-500 hover:scale-[1.02] group cursor-pointer ${item.borderHover} ${item.shadowHover}`}
+      className={`relative bg-[#08080c]/70 backdrop-blur-xl border border-white/[0.04] rounded-2xl md:rounded-[1.25rem] p-6 flex flex-col items-center justify-center text-center gap-3 transition-all duration-500 md:hover:scale-[1.02] group cursor-pointer ${item.borderHover} ${item.shadowHover}`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
       <div className="relative z-10 flex flex-col items-center">
         <Icon className={`w-6 h-6 md:w-7 md:h-7 ${item.color} mb-1 transition-all duration-300 ease-out`} />
         <div>
-          <h3 className="font-semibold text-slate-200 text-sm md:text-base group-hover:text-white transition-colors">{item.title}</h3>
+          <h3 className="font-semibold text-slate-200 text-sm md:text-base md:group-hover:text-white transition-colors">{item.title}</h3>
           <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-1">{item.desc}</p>
         </div>
       </div>
@@ -33,10 +33,10 @@ export const About = () => {
   ];
 
   const features = [
-    { icon: Code, title: "Web Apps", desc: "Building modern experiences", color: "text-cyan-400", shadowHover: "hover:shadow-[0_8px_30px_rgba(34,211,238,0.15)]", borderHover: "hover:border-cyan-500/30" },
-    { icon: Gamepad2, title: "Gaming", desc: "Competitive & creative", color: "text-purple-400", shadowHover: "hover:shadow-[0_8px_30px_rgba(168,85,247,0.15)]", borderHover: "hover:border-purple-500/30" },
-    { icon: BrainCircuit, title: "AI Tools", desc: "Exploring the frontier", color: "text-emerald-400", shadowHover: "hover:shadow-[0_8px_30px_rgba(52,211,153,0.15)]", borderHover: "hover:border-emerald-500/30" },
-    { icon: Globe, title: "Interactive XP", desc: "Immersive by design", color: "text-indigo-400", shadowHover: "hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]", borderHover: "hover:border-indigo-500/30" },
+    { icon: Code, title: "Web Apps", desc: "Building modern experiences", color: "text-cyan-400", shadowHover: "md:hover:shadow-[0_8px_30px_rgba(34,211,238,0.15)]", borderHover: "md:hover:border-cyan-500/30" },
+    { icon: Gamepad2, title: "Gaming", desc: "Competitive & creative", color: "text-purple-400", shadowHover: "md:hover:shadow-[0_8px_30px_rgba(168,85,247,0.15)]", borderHover: "md:hover:border-purple-500/30" },
+    { icon: BrainCircuit, title: "AI Tools", desc: "Exploring the frontier", color: "text-emerald-400", shadowHover: "md:hover:shadow-[0_8px_30px_rgba(52,211,153,0.15)]", borderHover: "md:hover:border-emerald-500/30" },
+    { icon: Globe, title: "Interactive XP", desc: "Immersive by design", color: "text-indigo-400", shadowHover: "md:hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)]", borderHover: "md:hover:border-indigo-500/30" },
   ];
 
   return (

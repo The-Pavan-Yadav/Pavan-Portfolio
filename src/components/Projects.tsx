@@ -8,23 +8,29 @@ import VelocityXImg from '../assets/images/regenerated_image_1779624402067.png';
 import DriftImg from '../assets/images/regenerated_image_1779624653598.png';
 
 const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (window.innerWidth < 768) return; // Skip 3D hover computations on mobile for 60fps scrolling
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    setMousePos({ x, y });
+    
+    el.style.setProperty('--mouse-x', `${x}px`);
+    el.style.setProperty('--mouse-y', `${y}px`);
 
-    // Subtle 3D tilt effect calculations
     const rotateX = ((y / rect.height) - 0.5) * -12; // max tilt 12deg
     const rotateY = ((x / rect.width) - 0.5) * 12;
-    setRotate({ x: rotateX, y: rotateY });
+    el.style.setProperty('--rotate-x', `${rotateX}deg`);
+    el.style.setProperty('--rotate-y', `${rotateY}deg`);
+    el.style.setProperty('--translate-y', `-8px`);
   };
 
-  const handleMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth < 768) return;
+    const el = e.currentTarget;
+    el.style.setProperty('--rotate-x', '0deg');
+    el.style.setProperty('--rotate-y', '0deg');
+    el.style.setProperty('--translate-y', '0px');
   };
 
   return (
@@ -35,25 +41,30 @@ const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) 
       transition={{ duration: 0.7, delay: idx * 0.1, ease: "easeOut" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{ rotateX: rotate.x, rotateY: rotate.y }}
-      className="group relative flex flex-col bg-[#070a13]/50 backdrop-blur-2xl rounded-3xl border border-white/[0.04] overflow-hidden transition-all duration-[600ms] ease-out hover:-translate-y-2 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(34,211,238,0.1),0_0_20px_rgba(192,132,252,0.05),inset_0_0_2px_rgba(255,255,255,0.05)] hover:z-10"
-      style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+      className="group relative flex flex-col bg-[#070a13]/50 backdrop-blur-2xl rounded-3xl border border-white/[0.04] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(34,211,238,0.1),0_0_20px_rgba(192,132,252,0.05),inset_0_0_2px_rgba(255,255,255,0.05)] hover:z-10"
+      style={{ 
+        transformStyle: "preserve-3d", 
+        perspective: "1000px",
+        transform: "rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) translateY(var(--translate-y, 0px))",
+        transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease",
+        willChange: "transform"
+      }}
     >
       {/* Mouse tracking glow */}
       <div 
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 mix-blend-screen"
+        className="absolute inset-0 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 mix-blend-screen"
         style={{
-          background: `radial-gradient(circle 300px at ${mousePos.x}px ${mousePos.y}px, rgba(34,211,238,0.1), transparent 80%)`,
+          background: `radial-gradient(circle 300px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(34,211,238,0.1), transparent 80%)`,
           transform: `translateZ(-10px)`
         }}
       />
       
       {/* Animated gradient borders on hover via pseudo-elements */}
-      <div className="absolute inset-0 border border-transparent rounded-3xl group-hover:border-cyan-500/30 transition-colors duration-700 pointer-events-none z-30" />
+      <div className="absolute inset-0 border border-transparent rounded-3xl md:group-hover:border-cyan-500/30 transition-colors duration-700 pointer-events-none z-30" />
 
       {/* Image Container with Parallax Zoom */}
       <div className="relative h-40 sm:h-48 md:h-56 overflow-hidden border-b border-white/[0.03] bg-[#070a13] z-10" style={{ transform: "translateZ(20px)" }}>
-        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/40 backdrop-blur-xl border border-white/[0.05] font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-300 shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:border-white/20 transition-all duration-300">
+        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/40 backdrop-blur-xl border border-white/[0.05] font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-300 shadow-[0_4px_10px_rgba(0,0,0,0.5)] md:group-hover:border-white/20 transition-all duration-300">
           <span className={`w-1.5 h-1.5 rounded-full ${project.statusColor} ${project.status === "Live" ? "animate-pulse" : ""}`} />
           {project.status}
         </div>
@@ -61,15 +72,15 @@ const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) 
         {/* Soft Vignette & Overlay Gradients */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,10,19,0.8)_100%)] z-10 transition-opacity duration-500 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070a13] via-transparent to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 mix-blend-screen opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 mix-blend-screen opacity-0 md:group-hover:opacity-100 transition-opacity duration-700 z-10 pointer-events-none" />
         
         {/* Subtle reflection effect on hover */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent mix-blend-overlay opacity-0 group-hover:opacity-100 transition-transform duration-700 z-10 -translate-y-full group-hover:translate-y-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent mix-blend-overlay opacity-0 md:group-hover:opacity-100 transition-transform duration-700 z-10 -translate-y-full md:group-hover:translate-y-0 pointer-events-none" />
         
         <img 
           src={project.image} 
           alt={project.title} 
-          className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.2,0.8,0.2,1)] opacity-70 group-hover:opacity-100 contrast-125 saturate-110 brightness-90 group-hover:brightness-100"
+          className="w-full h-full object-cover transform scale-105 md:group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.2,0.8,0.2,1)] opacity-70 md:group-hover:opacity-100 contrast-125 saturate-110 brightness-90 md:group-hover:brightness-100"
         />
       </div>
       

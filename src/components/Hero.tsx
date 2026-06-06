@@ -8,8 +8,12 @@ const SpaceBackground = () => {
   const [dust, setDust] = useState<{ id: number, x: number, y: number, size: number, duration: number }[]>([]);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? 15 : 40;
+    const dustCount = isMobile ? 0 : 12;
+
     // Generate Stars
-    setStars(Array.from({ length: 150 }).map((_, i) => ({
+    setStars(Array.from({ length: starCount }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -20,30 +24,36 @@ const SpaceBackground = () => {
     })));
 
     // Generate Dust
-    setDust(Array.from({ length: 40 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2 + 1,
-      duration: Math.random() * 30 + 30, // 30-60s
-    })));
+    if (dustCount > 0) {
+      setDust(Array.from({ length: dustCount }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 2 + 1,
+        duration: Math.random() * 30 + 30, // 30-60s
+      })));
+    }
 
     // Generate Meteors
     let timeoutId: ReturnType<typeof setTimeout>;
-    const createMeteor = () => {
-      const newMeteor = {
-        id: Date.now(),
-        top: Math.random() * 40 + "%", // top half
-        left: Math.random() * 80 + "%",
-        duration: Math.random() * 1.5 + 1.5,
-        delay: Math.random() * 0.5,
+    if (!isMobile) {
+      const createMeteor = () => {
+        const newMeteor = {
+          id: Date.now(),
+          top: Math.random() * 40 + "%", // top half
+          left: Math.random() * 80 + "%",
+          duration: Math.random() * 1.5 + 1.5,
+          delay: Math.random() * 0.5,
+        };
+        setMeteors(prev => [...prev.slice(-2), newMeteor]);
+        timeoutId = setTimeout(createMeteor, Math.random() * 6000 + 4000); // every 4-10s
       };
-      setMeteors(prev => [...prev.slice(-2), newMeteor]);
-      timeoutId = setTimeout(createMeteor, Math.random() * 6000 + 4000); // every 4-10s
-    };
-    timeoutId = setTimeout(createMeteor, 2000);
+      timeoutId = setTimeout(createMeteor, 2000);
+    }
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   return (
@@ -78,7 +88,7 @@ const SpaceBackground = () => {
       ))}
 
       {/* Dust Particles */}
-      {dust.map((d) => (
+      {dust.length > 0 && dust.map((d) => (
         <motion.div
           key={`dust-${d.id}`}
           className="absolute rounded-full bg-indigo-300/20 blur-[1px]"
@@ -137,6 +147,7 @@ export const Hero = () => {
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -149,6 +160,16 @@ export const Hero = () => {
   const rotateY = useTransform(smoothMouseX, [-0.5, 0.5], [-5, 5]);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     const handleMouseMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
       mouseX.set(e.clientX / innerWidth - 0.5);
@@ -157,7 +178,7 @@ export const Hero = () => {
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isMobile]);
 
   useEffect(() => {
     const title = titles[currentTitleIndex];
@@ -190,7 +211,7 @@ export const Hero = () => {
       <SpaceBackground />
 
       <motion.div 
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        style={isMobile ? { transformStyle: "preserve-3d" } : { rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative z-10 text-center px-6 w-full flex flex-col items-center justify-center max-w-5xl mx-auto flex-1"
       >
         {/* Faint subtle atmospheric edge lighting around the center */}

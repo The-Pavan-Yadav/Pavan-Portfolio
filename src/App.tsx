@@ -17,10 +17,10 @@ export default function App() {
     restDelta: 0.001
   });
 
-  const [coords, setCoords] = useState({ x: -100, y: -100 });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    setCoords({ x: e.clientX, y: e.clientY });
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    el.style.setProperty('--bg-mouse-x', `${e.clientX}px`);
+    el.style.setProperty('--bg-mouse-y', `${e.clientY}px`);
   }, []);
 
   return (
@@ -42,7 +42,7 @@ export default function App() {
       <div 
         className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-300 opacity-40 mix-blend-screen"
         style={{
-          background: `radial-gradient(circle 800px at ${coords.x}px ${coords.y}px, rgba(55, 48, 163, 0.15), transparent 70%)`
+          background: `radial-gradient(circle 800px at var(--bg-mouse-x, -1000px) var(--bg-mouse-y, -1000px), rgba(55, 48, 163, 0.15), transparent 70%)`
         }}
       />
       
