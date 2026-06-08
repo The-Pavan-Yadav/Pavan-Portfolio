@@ -51,10 +51,3 @@ index.html
 package.json
 README.md
 
-Contact
-
-GitHub: https://github.com/The-Pavan-Yadav
-Portfolio: Available through this repository deployment
-
-License
-This project is open-source and available under the MIT License.
