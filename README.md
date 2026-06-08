@@ -44,10 +44,3 @@ npm run dev
 
 
 
-Project Structure
-src/
-public/
-index.html
-package.json
-README.md
-
