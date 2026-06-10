@@ -8,6 +8,7 @@ import VelocityXImg from '../assets/images/regenerated_image_1779624402067.png';
 import DriftImg from '../assets/images/regenerated_image_1779624653598.png';
 
 const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth < 768) return; // Skip 3D hover computations on mobile for 60fps scrolling
     const el = e.currentTarget;
@@ -35,10 +36,14 @@ const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) 
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: isMobile ? 15 : 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.7, delay: idx * 0.1, ease: "easeOut" }}
+      viewport={{ once: true, margin: isMobile ? "-30px" : "-50px" }}
+      transition={{ 
+        duration: isMobile ? 0.4 : 0.7, 
+        delay: isMobile ? Math.min(0.12, idx * 0.04) : idx * 0.1, 
+        ease: "easeOut" 
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="group relative flex flex-col bg-[#070a13]/50 backdrop-blur-2xl rounded-3xl border border-white/[0.04] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(34,211,238,0.1),0_0_20px_rgba(192,132,252,0.05),inset_0_0_2px_rgba(255,255,255,0.05)] hover:z-10"
@@ -132,6 +137,7 @@ const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) 
 };
 
 export const Projects = () => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const projects = [
     {
       title: "Drift",
@@ -198,17 +204,17 @@ export const Projects = () => {
   return (
     <section id="projects" className="py-24 px-6 md:px-12 relative z-10 w-full flex justify-center overflow-hidden">
       {/* Cinematic Glows */}
-      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-cyan-900/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen -translate-x-1/2" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen translate-x-1/3" />
+      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-cyan-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen -translate-x-1/2" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen translate-x-1/3" />
 
       <div className="max-w-7xl w-full relative z-10">
         
         {/* Header Section */}
         <motion.div 
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          initial={isMobile ? { opacity: 0, y: 15 } : { opacity: 0, y: 30, filter: "blur(10px)" }}
+          whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
+          transition={{ duration: isMobile ? 0.45 : 0.8, ease: "easeOut" }}
           className="mb-10 md:mb-16"
         >
           <div className="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">

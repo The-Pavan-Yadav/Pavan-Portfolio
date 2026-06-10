@@ -109,9 +109,9 @@ const colorThemes: Record<string, any> = {
   }
 };
 
-const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: (id: string | null) => void; idx: number }> = ({ skill, activeId, setActiveId, idx }) => {
-  const isActive = activeId === skill.id;
+const SkillCardComp: React.FC<{ skill: Skill; isActive: boolean; setActiveId: (id: string | null) => void; idx: number }> = ({ skill, isActive, setActiveId, idx }) => {
   const theme = colorThemes[skill.themeColor];
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.innerWidth < 768) return; // Skip custom glow movement on mobile
@@ -137,10 +137,13 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
   return (
     <motion.div
       onClick={() => setActiveId(isActive ? null : skill.id)}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: isMobile ? 12 : 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: idx * 0.1 }}
+      viewport={{ once: true, margin: isMobile ? "-30px" : "-50px" }}
+      transition={{ 
+        duration: isMobile ? 0.35 : 0.5, 
+        delay: isMobile ? Math.min(0.12, (idx % 2) * 0.05) : idx * 0.1 
+      }}
       onMouseMove={handleMouseMove}
       className={`group relative overflow-hidden cursor-pointer rounded-2xl md:rounded-3xl border p-4 sm:p-5 md:p-6 transition-all duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] md:hover:-translate-y-3 shadow-[0_8px_30px_rgba(0,0,0,0.5)] ${
         isActive 
@@ -184,7 +187,11 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
           </div>
         </div>
         <div className={`absolute top-0 right-0 sm:static w-5 h-5 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${isActive ? `border-${skill.themeColor}-500/50 text-${skill.themeColor}-400 bg-${skill.themeColor}-500/10` : `border-white/5 text-slate-500 group-hover:border-${skill.themeColor}-500/40 group-hover:text-${skill.themeColor}-400 group-hover:bg-${skill.themeColor}-500/10`}`}>
-          <motion.div animate={{ rotate: isActive ? 45 : 0 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
+          <motion.div 
+            inherit={false}
+            animate={{ rotate: isActive ? 45 : 0 }} 
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          >
             <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
           </motion.div>
         </div>
@@ -193,10 +200,11 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
       <AnimatePresence>
         {isActive && (
           <motion.div
-            initial={{ height: 0, opacity: 0, filter: "blur(5px)" }}
-            animate={{ height: "auto", opacity: 1, filter: "blur(0px)" }}
-            exit={{ height: 0, opacity: 0, filter: "blur(5px)" }}
-            transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+            inherit={false}
+            initial={isMobile ? { height: 0, opacity: 0 } : { height: 0, opacity: 0, filter: "blur(5px)" }}
+            animate={isMobile ? { height: "auto", opacity: 1 } : { height: "auto", opacity: 1, filter: "blur(0px)" }}
+            exit={isMobile ? { height: 0, opacity: 0 } : { height: 0, opacity: 0, filter: "blur(5px)" }}
+            transition={{ duration: isMobile ? 0.3 : 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
             className="overflow-hidden relative z-10"
           >
             <div className={`h-[1px] w-full my-4 sm:my-6 ${theme.divider}`} />
@@ -212,9 +220,11 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
             
             <div className={`h-1.5 w-full rounded-full overflow-hidden ${theme.barBg}`}>
               <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${skill.power}%` }}
-                transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+                inherit={false}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                style={{ transformOrigin: "left", width: `${skill.power}%` }}
+                transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
                 className={`h-full rounded-full ${theme.barFill} relative`}
               >
                 <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]" />
@@ -228,8 +238,11 @@ const SkillCard: React.FC<{ skill: Skill; activeId: string | null; setActiveId: 
   );
 };
 
+const SkillCard = React.memo(SkillCardComp);
+
 export const Skills = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const skills: Skill[] = [
     { id: "js", title: "JavaScript", category: "FRONTEND", logo: <JSIcon />, themeColor: "yellow", desc: "ES2024+, async/await, DOM manipulation, functional patterns.", power: 90 },
@@ -245,15 +258,15 @@ export const Skills = () => {
   return (
     <section id="skills" className="py-24 px-6 md:px-12 relative z-10 w-full flex justify-center overflow-hidden">
       {/* Background Glows */}
-      <div className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen -translate-y-1/2" />
-      <div className="absolute bottom-0 left-[10%] w-[400px] h-[400px] bg-cyan-900/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen translate-y-1/2" />
+      <div className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-purple-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen -translate-y-1/2" />
+      <div className="absolute bottom-0 left-[10%] w-[400px] h-[400px] bg-cyan-950/12 rounded-full blur-[160px] pointer-events-none mix-blend-screen translate-y-1/2" />
 
       <div className="max-w-5xl w-full relative z-10">
         <motion.div
-           initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-           viewport={{ once: true, margin: "-100px" }}
-           transition={{ duration: 0.8, ease: "easeOut" }}
+           initial={isMobile ? { opacity: 0, y: 15 } : { opacity: 0, y: 30, filter: "blur(10px)" }}
+           whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+           viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
+           transition={{ duration: isMobile ? 0.45 : 0.8, ease: "easeOut" }}
            className="mb-10 md:mb-14"
         >
           <div className="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
@@ -272,7 +285,7 @@ export const Skills = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {skills.map((skill, idx) => (
-            <SkillCard key={skill.id} skill={skill} activeId={activeId} setActiveId={setActiveId} idx={idx} />
+            <SkillCard key={skill.id} skill={skill} isActive={activeId === skill.id} setActiveId={setActiveId} idx={idx} />
           ))}
         </div>
       </div>

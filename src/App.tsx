@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <div 
-      className="min-h-screen bg-[#050505] text-slate-50 relative selection:bg-purple-500/30 selection:text-white"
+      className="min-h-screen bg-[#030303] text-slate-50 relative selection:bg-purple-500/30 selection:text-white"
       onMouseMove={handleMouseMove}
     >
       {/* Animated Neon Scroll Progress Bar */}
@@ -34,7 +34,7 @@ export default function App() {
         style={{ scaleX }}
       />
 
-      <div className="fixed inset-0 z-0 bg-[#05050a]" />
+      <div className="fixed inset-0 z-0 bg-[#030303]" />
 
       <Starfield />
 
@@ -42,15 +42,15 @@ export default function App() {
       <div 
         className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-300 opacity-40 mix-blend-screen"
         style={{
-          background: `radial-gradient(circle 800px at var(--bg-mouse-x, -1000px) var(--bg-mouse-y, -1000px), rgba(55, 48, 163, 0.15), transparent 70%)`
+          background: `radial-gradient(circle 800px at var(--bg-mouse-x, -1000px) var(--bg-mouse-y, -1000px), rgba(55, 48, 163, 0.12), transparent 75%)`
         }}
       />
       
       {/* Cinematic Ambient Glow Layer */}
-      <div className="fixed inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
-          <div className="absolute top-[60%] -right-[10%] w-[50%] h-[50%] rounded-full bg-cyan-600/10 blur-[120px] animate-[pulse_10s_ease-in-out_infinite_reverse]" />
-          <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[40%] rounded-full bg-purple-600/10 blur-[120px] animate-[pulse_12s_ease-in-out_infinite]" />
+      <div className="fixed inset-0 z-0 opacity-35 mix-blend-screen pointer-events-none">
+          <div className="absolute -top-[15%] -left-[10%] w-[65%] h-[65%] rounded-full bg-indigo-900/10 blur-[180px] animate-[pulse_9s_ease-in-out_infinite]" />
+          <div className="absolute top-[45%] -right-[15%] w-[60%] h-[60%] rounded-full bg-purple-900/8 blur-[200px] animate-[pulse_11s_ease-in-out_infinite_reverse]" />
+          <div className="absolute bottom-[-15%] left-[15%] w-[60%] h-[50%] rounded-full bg-blue-900/8 blur-[180px] animate-[pulse_13s_ease-in-out_infinite]" />
       </div>
       
       {/* Subtle Animated Noise Overlay */}

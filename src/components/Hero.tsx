@@ -59,9 +59,9 @@ const SpaceBackground = () => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Nebula Fog / Atmospheric Blobs */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-900/10 rounded-full blur-[150px] mix-blend-screen opacity-50" />
-      <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-blue-900/10 rounded-full blur-[120px] mix-blend-screen opacity-40" />
-      <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[60%] bg-cyan-900/5 rounded-full blur-[180px] mix-blend-screen opacity-50" />
+      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-950/12 rounded-full blur-[180px] mix-blend-screen opacity-50" />
+      <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-blue-950/12 rounded-full blur-[160px] mix-blend-screen opacity-45" />
+      <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[60%] bg-cyan-950/10 rounded-full blur-[200px] mix-blend-screen opacity-50" />
       
       {/* Stars */}
       {stars.map((star) => (

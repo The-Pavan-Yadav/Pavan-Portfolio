@@ -4,13 +4,18 @@ import React from 'react';
 
 const FeatureCard: React.FC<{ item: any; idx: number }> = ({ item, idx }) => {
   const Icon = item.icon;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: isMobile ? 12 : 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: 0.6 + (idx * 0.1), ease: "easeOut" }}
+      viewport={{ once: true, margin: isMobile ? "-30px" : "-50px" }}
+      transition={{ 
+        duration: isMobile ? 0.35 : 0.5, 
+        delay: isMobile ? 0.1 + (idx * 0.05) : 0.4 + (idx * 0.1), 
+        ease: "easeOut" 
+      }}
       className={`relative bg-[#08080c]/70 backdrop-blur-xl border border-white/[0.04] rounded-2xl md:rounded-[1.25rem] p-6 flex flex-col items-center justify-center text-center gap-3 transition-all duration-500 md:hover:scale-[1.02] group cursor-pointer ${item.borderHover} ${item.shadowHover}`}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit]" />
@@ -26,6 +31,7 @@ const FeatureCard: React.FC<{ item: any; idx: number }> = ({ item, idx }) => {
 };
 
 export const About = () => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const stats = [
     { value: "6+", label: "PROJECTS BUILT" },
     { value: "2", label: "YEARS LEARNING" },
@@ -42,17 +48,17 @@ export const About = () => {
   return (
     <section id="about" className="py-16 md:py-24 px-4 md:px-12 relative z-10 w-full flex justify-center overflow-hidden">
       {/* Subtle Background Glows */}
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-cyan-900/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen -translate-y-1/2 -translate-x-1/2" />
-      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-900/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-cyan-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen -translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-purple-950/12 rounded-full blur-[160px] pointer-events-none mix-blend-screen -translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-5xl w-full relative z-10">
         
         {/* Label and Heading */}
         <motion.div
-           initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-           viewport={{ once: true, margin: "-100px" }}
-           transition={{ duration: 0.8, ease: "easeOut" }}
+           initial={isMobile ? { opacity: 0, y: 15 } : { opacity: 0, y: 30, filter: "blur(10px)" }}
+           whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+           viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
+           transition={{ duration: isMobile ? 0.45 : 0.8, ease: "easeOut" }}
            className="mb-10 md:mb-14"
         >
           <div className="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
@@ -67,10 +73,10 @@ export const About = () => {
 
         {/* Stats Row */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: isMobile ? 12 : 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
+          transition={{ duration: isMobile ? 0.45 : 0.8, delay: isMobile ? 0.1 : 0.2, ease: "easeOut" }}
           className="flex flex-wrap gap-6 sm:gap-12 md:gap-24 mb-10 md:mb-16 justify-center md:justify-start"
         >
           {stats.map((stat, idx) => (
@@ -88,10 +94,10 @@ export const About = () => {
 
         {/* Story Text Container */}
         <motion.div 
-          initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
-          whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          initial={isMobile ? { opacity: 0, y: 15 } : { opacity: 0, filter: "blur(10px)", y: 20 }}
+          whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, filter: "blur(0px)", y: 0 }}
+          viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
+          transition={{ duration: isMobile ? 0.5 : 0.8, delay: isMobile ? 0.15 : 0.4, ease: "easeOut" }}
           className="relative bg-[#08080c]/50 backdrop-blur-2xl border border-white/[0.04] rounded-2xl md:rounded-3xl p-5 sm:p-8 md:p-12 mb-6 shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition-all duration-700 hover:shadow-[0_20px_40px_rgba(168,85,247,0.1),inset_0_0_30px_rgba(168,85,247,0.05)] hover:border-purple-500/20 group overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

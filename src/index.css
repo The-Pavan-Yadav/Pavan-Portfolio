@@ -72,7 +72,7 @@ html::-webkit-scrollbar {
 }
 
 body {
-  @apply bg-[#050505] text-slate-50 selection:bg-purple-500/30 selection:text-white font-sans;
+  @apply bg-[#030303] text-slate-50 selection:bg-purple-500/30 selection:text-white font-sans;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

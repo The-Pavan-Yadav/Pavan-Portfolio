@@ -1,46 +1,20 @@
-Pavan Portfolio
-A modern and responsive personal portfolio website showcasing my skills, projects, achievements, and contact information.
-About Me
-Hi, I'm Pavan. I am passionate about technology, software development, and building useful applications. This portfolio highlights my projects, technical skills, and learning journey.
-Features
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-Responsive design for desktop and mobile
-Modern UI/UX
-Project showcase section
-Skills section
-About Me section
-Contact information
-Fast and lightweight performance
+# Run and deploy your AI Studio app
 
-Tech Stack
+This contains everything you need to run your app locally.
 
-HTML5
-CSS3
-JavaScript
-TypeScript
-React
-Vite
+View your app in AI Studio: https://ai.studio/apps/0587f3b7-b426-46e9-be6f-9067af88190c
 
-Installation
+## Run Locally
+
+**Prerequisites:**  Node.js
 
 
-Clone the repository:
-git clone https://github.com/The-Pavan-Yadav/Pavan-Portfolio.git
-
-
-
-Navigate to the project:
-cd Pavan-Portfolio
-
-
-
-Install dependencies:
-npm install
-
-
-
-Start the development server:
-npm run dev
-
-
-
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
