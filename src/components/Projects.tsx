@@ -1,238 +1,283 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, Clock, MessageSquare, Activity, PenTool, Cloud, Gamepad2, Layers } from 'lucide-react';
 import React from 'react';
-// @ts-ignore
-import VelocityXImg from '../assets/images/regenerated_image_1779624402067.png';
-// @ts-ignore
-import DriftImg from '../assets/images/regenerated_image_1779624653598.png';
 
-const ProjectCard: React.FC<{ project: any; idx: number }> = ({ project, idx }) => {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.innerWidth < 768) return; // Skip 3D hover computations on mobile for 60fps scrolling
-    const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    el.style.setProperty('--mouse-x', `${x}px`);
-    el.style.setProperty('--mouse-y', `${y}px`);
+interface Project {
+  title: string;
+  description: string;
+  tags: string[];
+  status: 'Live' | 'In Progress' | 'Beta';
+  github: string;
+  demo: string;
+  previewId: string;
+}
 
-    const rotateX = ((y / rect.height) - 0.5) * -12; // max tilt 12deg
-    const rotateY = ((x / rect.width) - 0.5) * 12;
-    el.style.setProperty('--rotate-x', `${rotateX}deg`);
-    el.style.setProperty('--rotate-y', `${rotateY}deg`);
-    el.style.setProperty('--translate-y', `-8px`);
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (window.innerWidth < 768) return;
-    const el = e.currentTarget;
-    el.style.setProperty('--rotate-x', '0deg');
-    el.style.setProperty('--rotate-y', '0deg');
-    el.style.setProperty('--translate-y', '0px');
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: isMobile ? 15 : 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: isMobile ? "-30px" : "-50px" }}
-      transition={{ 
-        duration: isMobile ? 0.4 : 0.7, 
-        delay: isMobile ? Math.min(0.12, idx * 0.04) : idx * 0.1, 
-        ease: "easeOut" 
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group relative flex flex-col bg-[#070a13]/50 backdrop-blur-2xl rounded-3xl border border-white/[0.04] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(34,211,238,0.1),0_0_20px_rgba(192,132,252,0.05),inset_0_0_2px_rgba(255,255,255,0.05)] hover:z-10"
-      style={{ 
-        transformStyle: "preserve-3d", 
-        perspective: "1000px",
-        transform: "rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) translateY(var(--translate-y, 0px))",
-        transition: "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease",
-        willChange: "transform"
-      }}
-    >
-      {/* Mouse tracking glow */}
-      <div 
-        className="absolute inset-0 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 mix-blend-screen"
-        style={{
-          background: `radial-gradient(circle 300px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(34,211,238,0.1), transparent 80%)`,
-          transform: `translateZ(-10px)`
-        }}
-      />
-      
-      {/* Animated gradient borders on hover via pseudo-elements */}
-      <div className="absolute inset-0 border border-transparent rounded-3xl md:group-hover:border-cyan-500/30 transition-colors duration-700 pointer-events-none z-30" />
-
-      {/* Image Container with Parallax Zoom */}
-      <div className="relative h-40 sm:h-48 md:h-56 overflow-hidden border-b border-white/[0.03] bg-[#070a13] z-10" style={{ transform: "translateZ(20px)" }}>
-        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/40 backdrop-blur-xl border border-white/[0.05] font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-300 shadow-[0_4px_10px_rgba(0,0,0,0.5)] md:group-hover:border-white/20 transition-all duration-300">
-          <span className={`w-1.5 h-1.5 rounded-full ${project.statusColor} ${project.status === "Live" ? "animate-pulse" : ""}`} />
-          {project.status}
-        </div>
-        
-        {/* Soft Vignette & Overlay Gradients */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,10,19,0.8)_100%)] z-10 transition-opacity duration-500 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070a13] via-transparent to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 mix-blend-screen opacity-0 md:group-hover:opacity-100 transition-opacity duration-700 z-10 pointer-events-none" />
-        
-        {/* Subtle reflection effect on hover */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent mix-blend-overlay opacity-0 md:group-hover:opacity-100 transition-transform duration-700 z-10 -translate-y-full md:group-hover:translate-y-0 pointer-events-none" />
-        
-        <img 
-          src={project.image} 
-          alt={project.title} 
-          className="w-full h-full object-cover transform scale-105 md:group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.2,0.8,0.2,1)] opacity-70 md:group-hover:opacity-100 contrast-125 saturate-110 brightness-90 md:group-hover:brightness-100"
-        />
-      </div>
-      
-      {/* Content Container */}
-      <div className="p-4 sm:p-6 md:p-8 flex-1 flex flex-col relative z-20 bg-gradient-to-b from-transparent to-black/20" style={{ transform: "translateZ(30px)" }}>
-        <h3 className="text-lg sm:text-xl md:text-2xl font-sans font-bold text-white mb-2 tracking-tight drop-shadow-sm group-hover:text-cyan-50 transition-colors duration-300 group-hover:drop-shadow-[0_0_15px_rgba(207,250,254,0.4)]">
-          {project.title}
-        </h3>
-        
-        <p className="text-slate-400 flex-1 text-[11px] sm:text-xs md:text-sm leading-relaxed md:leading-[1.7] font-medium mb-4 sm:mb-6 group-hover:text-slate-300 transition-colors duration-300">
-          {project.description}
-        </p>
-        
-        {/* Glowing Tech Tags */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-5 sm:mb-6 md:mb-8">
-          {project.tags.map((tag: string) => (
-            <span key={tag} className="text-[7.5px] sm:text-[8px] md:text-[9px] font-mono font-semibold tracking-widest px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-white/[0.015] border border-white/5 text-slate-300 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 group-hover:text-cyan-300 transition-all duration-300 shadow-[inset_0_0_10px_transparent] group-hover:shadow-[inset_0_0_15px_rgba(34,211,238,0.2)]">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-white/[0.03]">
-          {project.demo === "soon" ? (
-            <div className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-xl bg-slate-500/5 border border-slate-500/10 text-slate-400 text-[9px] sm:text-[10px] md:text-xs font-semibold opacity-70 cursor-not-allowed backdrop-blur-md">
-              <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-slate-500"></span>
-              </span>
-              Coming Soon
+const ProjectPreview = ({ id }: { id: string }) => {
+  switch (id) {
+    case 'drift':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[200px] h-[120px] bg-[#0A0A0A] rounded-lg border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden relative">
+            <div className="h-6 border-b border-[#1A1A1A] flex items-center px-3 gap-1.5 bg-[#050505]">
+              <div className="w-2 h-2 rounded-full bg-[#1A1A1A]"></div>
+              <div className="w-2 h-2 rounded-full bg-[#1A1A1A]"></div>
+              <div className="w-2 h-2 rounded-full bg-[#1A1A1A]"></div>
             </div>
-          ) : (
-            <a href={project.demo} target="_blank" rel="noopener noreferrer" className="relative group/btn flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[9px] sm:text-[10px] md:text-xs font-semibold hover:bg-cyan-500/20 hover:border-cyan-500/40 hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:text-cyan-300 transition-all duration-300 backdrop-blur-md overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
-              <ExternalLink className="w-3 h-3 md:w-3.5 md:h-3.5 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] group-hover/btn:drop-shadow-[0_0_12px_rgba(34,211,238,0.8)] transition-all duration-300" />
-              <span className="relative z-10">Live Demo</span>
-            </a>
-          )}
-          <a href={project.github} target="_blank" rel="noopener noreferrer" className="relative group/btn flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 text-[9px] sm:text-[10px] md:text-xs font-semibold hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all duration-300 backdrop-blur-md overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]" />
-            <Github className="w-3 h-3 md:w-3.5 md:h-3.5 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] group-hover/btn:drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] transition-all duration-300" />
-            <span className="relative z-10">Source</span>
-          </a>
+            <div className="flex-1 p-3 flex flex-col gap-2 relative z-10">
+              <div className="w-3/4 h-6 bg-[#3B82F6]/10 rounded-tr-xl rounded-bl-xl rounded-br-xl border border-[#3B82F6]/20 self-start"></div>
+              <div className="w-2/3 h-8 bg-[#121212] rounded-tl-xl rounded-bl-xl rounded-br-xl self-end mt-1"></div>
+            </div>
+            <MessageSquare className="absolute bottom-2 left-3 w-16 h-16 text-[#3B82F6]/5 -z-0 transform -rotate-12" />
+          </div>
         </div>
-      </div>
-    </motion.div>
-  );
+      );
+    case 'velocity':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[220px] h-[120px] bg-[#0A0A0A] rounded-lg border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] p-3 flex flex-col justify-between relative overflow-hidden">
+            <div className="flex justify-between items-center mb-2 z-10">
+              <div className="w-16 h-2 bg-[#1A1A1A] rounded-full"></div>
+              <Activity className="w-4 h-4 text-[#3B82F6]/50" />
+            </div>
+            <div className="flex items-end justify-between h-12 gap-1 z-10">
+              {[40, 70, 45, 90, 60, 85, 30].map((h, i) => (
+                <div key={i} className="w-full bg-[#121212] rounded-t-sm border border-[#1A1A1A] border-b-0" style={{ height: `${h}%` }}>
+                  <div className="w-full bg-[#3B82F6]/30 rounded-t-sm" style={{ height: `${h * 0.4}%` }}></div>
+                </div>
+              ))}
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] to-transparent z-0"></div>
+          </div>
+        </div>
+      );
+    case 'canvas':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[200px] h-[120px] bg-[#050505] rounded-lg border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-8 h-full border-r border-[#1A1A1A] bg-[#0A0A0A] flex flex-col items-center py-2 gap-2">
+              <div className="w-4 h-4 rounded bg-[#1A1A1A]"></div>
+              <div className="w-4 h-4 rounded bg-[#1A1A1A]"></div>
+              <div className="w-4 h-4 rounded bg-[#1A1A1A]"></div>
+            </div>
+            <div className="ml-8 w-full h-full p-4 relative">
+              <div className="w-16 h-16 border border-[#3B82F6]/20 bg-[#3B82F6]/5 rounded-lg absolute top-4 left-6 rotate-12 flex items-center justify-center">
+                 <PenTool className="w-6 h-6 text-[#3B82F6]/30" />
+              </div>
+              <div className="w-12 h-12 border border-[#1A1A1A] bg-[#0A0A0A] rounded-full absolute bottom-4 right-8 -rotate-6"></div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'weather':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[180px] h-[130px] bg-[#0A0A0A] rounded-2xl border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] p-4 flex flex-col items-center justify-center relative overflow-hidden">
+            <Cloud className="w-12 h-12 text-[#666666] mb-2 z-10" />
+            <div className="text-xl font-bold text-white z-10">72°</div>
+            <div className="w-12 h-1.5 bg-[#1A1A1A] rounded-full mt-2 z-10"></div>
+            <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#3B82F6]/5 rounded-full blur-xl z-0"></div>
+          </div>
+        </div>
+      );
+    case 'arcade':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[200px] h-[120px] bg-[#0A0A0A] rounded-lg border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden">
+            <div className="flex-1 bg-[#050505] relative flex items-center justify-center border-b border-[#1A1A1A]">
+               <Gamepad2 className="w-10 h-10 text-[#1A1A1A]" />
+               <div className="absolute top-2 right-2 flex gap-1">
+                 <div className="w-1.5 h-1.5 bg-[#3B82F6]/40 rounded-full"></div>
+                 <div className="w-1.5 h-1.5 bg-[#3B82F6]/40 rounded-full"></div>
+               </div>
+            </div>
+            <div className="h-8 bg-[#0A0A0A] flex justify-center items-center gap-4">
+              <div className="w-6 h-2 bg-[#1A1A1A] rounded-full"></div>
+              <div className="w-6 h-2 bg-[#1A1A1A] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'chain':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[160px] h-[160px] transform rotate-[10deg] md:rotate-[15deg]">
+            <div className="grid grid-cols-3 gap-1 w-full h-full p-2 bg-[#0A0A0A] rounded-xl border border-[#1A1A1A]">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="bg-[#050505] rounded-md border border-[#1A1A1A] flex items-center justify-center">
+                   {i === 4 && <Layers className="w-5 h-5 text-[#3B82F6]/30" />}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    default:
+      return <div className="w-full h-full bg-[#050505]"></div>;
+  }
 };
 
 export const Projects = () => {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const projects = [
+  const projects: Project[] = [
     {
       title: "Drift",
-      description: "Modern realtime chat web app featuring a futuristic UI and Firebase-powered realtime messaging system.",
-      tags: ["REACT", "FIREBASE", "TAILWIND"],
-      image: DriftImg,
+      description: "Modern realtime chat web application featuring a responsive, clean interface and Firebase-powered realtime messaging synchronization.",
+      tags: ["React", "Firebase", "Tailwind CSS"],
+      previewId: "drift",
       status: "Live",
-      statusColor: "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]",
       github: "https://github.com/The-Pavan-Yadav/Drift",
       demo: "https://drift-852264470633.us-west1.run.app/"
     },
     {
       title: "Velocity X",
-      description: "High-speed interactive showcase and futuristic web experience with motion-heavy, immersive performance.",
-      tags: ["REACT", "MOTION", "WEBGL"],
-      image: VelocityXImg,
+      description: "High-performance interactive showcase web application built for speed, responsive animations, and seamless interactive user flows.",
+      tags: ["React", "Motion", "TypeScript"],
+      previewId: "velocity",
       status: "Live",
-      statusColor: "bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.8)]",
       github: "https://github.com/The-Pavan-Yadav/VelocityX",
       demo: "https://velocityx-cyber.vercel.app/"
     },
     {
       title: "Canvas Craft",
-      description: "Creative design/canvas web application offering interactive editing tools in a clean futuristic workspace.",
-      tags: ["TYPESCRIPT", "CANVAS", "FABRIC"],
-      image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=1000",
-      status: "WIP",
-      statusColor: "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]",
+      description: "Interactive canvas editor tool designed for creative layout generation with crisp, vector-based rendering capabilities.",
+      tags: ["TypeScript", "Canvas API", "Tailwind CSS"],
+      previewId: "canvas",
+      status: "In Progress",
       github: "https://github.com/The-Pavan-Yadav/Canvas-Craft",
       demo: "soon"
     },
     {
       title: "Weather App",
-      description: "Modern weather forecasting app with dynamic atmospheric backgrounds and realtime data feel.",
-      tags: ["REACT", "REST API", "TAILWIND"],
-      image: "https://images.unsplash.com/photo-1454789476662-53eb23ba5907?auto=format&fit=crop&q=80&w=1000",
+      description: "Realtime meteorological forecasting application with location search, dynamic metric indicators, and clean data visualizations.",
+      tags: ["React", "REST API", "Tailwind CSS"],
+      previewId: "weather",
       status: "Live",
-      statusColor: "bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]",
       github: "https://github.com/The-Pavan-Yadav/Weather-App",
       demo: "https://the-pavan-yadav.github.io/Weather-App/"
     },
     {
-      title: "My Game",
-      description: "Interactive browser game project featuring smooth gameplay animations and an arcade futuristic style.",
-      tags: ["JAVASCRIPT", "HTML5", "CSS3"],
-      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
+      title: "Browser Arcade Game",
+      description: "Canvas-based interactive arcade browser game featuring custom physics, responsive controls, and high-score tracking.",
+      tags: ["JavaScript", "HTML5 Canvas", "CSS3"],
+      previewId: "arcade",
       status: "Live",
-      statusColor: "bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.8)]",
       github: "https://github.com/The-Pavan-Yadav/My-Game",
       demo: "https://the-pavan-yadav.github.io/My-Game/"
     },
     {
       title: "Chain Reaction",
-      description: "Multiplayer strategy reaction game utilizing a neon glowing game interface and competitive gameplay.",
-      tags: ["WEBSOCKETS", "MULTIPLAYER", "NODE.JS"],
-      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000",
+      description: "Multiplayer tactical strategy game featuring realtime socket communication and interactive turn-based board mechanics.",
+      tags: ["Node.js", "WebSockets", "JavaScript"],
+      previewId: "chain",
       status: "Beta",
-      statusColor: "bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.8)]",
       github: "https://github.com/niharikaveeram18/Chain-Reaction-game",
       demo: "soon"
     }
   ];
 
   return (
-    <section id="projects" className="py-24 px-6 md:px-12 relative z-10 w-full flex justify-center overflow-hidden">
-      {/* Cinematic Glows */}
-      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-cyan-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen -translate-x-1/2" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-950/12 rounded-full blur-[180px] pointer-events-none mix-blend-screen translate-x-1/3" />
-
-      <div className="max-w-7xl w-full relative z-10">
-        
-        {/* Header Section */}
-        <motion.div 
-          initial={isMobile ? { opacity: 0, y: 15 } : { opacity: 0, y: 30, filter: "blur(10px)" }}
-          whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true, margin: isMobile ? "-40px" : "-100px" }}
-          transition={{ duration: isMobile ? 0.45 : 0.8, ease: "easeOut" }}
-          className="mb-10 md:mb-16"
-        >
-          <div className="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
-            <div className="w-8 md:w-12 h-[1px] bg-slate-700" />
-            <span className="text-slate-400 text-[10px] md:text-sm font-mono tracking-widest md:tracking-[0.3em] uppercase font-bold">Projects</span>
-          </div>
-
-          <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-sans font-bold tracking-tight text-slate-100 mb-2 md:mb-4">
-            Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-purple-400 drop-shadow-[0_2px_10px_rgba(168,85,247,0.2)] pb-1 md:pb-2">Work</span>
-          </h2>
-        </motion.div>
-
-        {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {projects.map((project, idx) => (
-            <ProjectCard key={idx} project={project} idx={idx} />
-          ))}
+    <section id="projects" className="py-12 md:py-24 lg:py-32 relative w-[90%] md:w-full mx-auto">
+      {/* Section Header */}
+      <div className="mb-8 md:mb-16 lg:mb-24">
+        {/* 03. Line */}
+        <div className="flex items-center gap-4 mb-3 md:mb-4">
+          <span className="text-[#64748B] font-mono text-xs md:text-sm font-semibold tracking-wider">03.</span>
+          <div className="h-[1px] bg-[#1F1F1F] w-24 md:w-32 lg:w-64"></div>
         </div>
+        
+        <div className="relative inline-block mb-2 md:mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight flex items-center gap-2 md:gap-3 select-none">
+            <span className="text-[#F8FAFC]">Featured</span>
+            <span className="text-[#64748B]">Projects</span>
+          </h2>
+        </div>
+      </div>
+
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        {projects.map((project, idx) => (
+          <motion.div
+            key={project.title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: idx * 0.1, ease: "easeOut" }}
+            className="bg-[#0A0A0A] border border-[#1A1A1A] hover:border-[#2563EB]/30 rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-300 group shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:shadow-[0_8px_24px_rgba(0,0,0,0.45)] hover:-translate-y-1"
+          >
+            <div>
+              {/* Screenshot Container */}
+              <div className="relative h-28 md:h-40 overflow-hidden bg-[#050505] border-b border-[#1A1A1A]">
+                
+                <div className="w-full h-full opacity-70 group-hover:opacity-100 transition-all duration-500 ease-out group-hover:scale-[1.02]">
+                  <ProjectPreview id={project.previewId} />
+                </div>
+                
+                {/* Status Badge */}
+                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 z-20">
+                  <span className="inline-flex items-center gap-1 md:gap-1.5 px-1.5 py-0.5 md:px-2 rounded-md text-[8px] md:text-[9px] font-mono font-bold bg-[#000000]/90 backdrop-blur-sm border border-[#1A1A1A] text-white shadow-sm">
+                    <span className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${
+                      project.status === 'Live' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' :
+                      project.status === 'In Progress' ? 'bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]'
+                    }`} />
+                    {project.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-3 md:p-4 lg:p-5">
+                <h3 className="text-[1.1rem] md:text-lg font-bold text-white mb-1.5 md:mb-2 group-hover:text-[#3B82F6] transition-colors duration-300">
+                  {project.title}
+                </h3>
+                
+                <p className="text-[0.8rem] md:text-xs text-[#B3B3B3] leading-relaxed mb-3 md:mb-4 line-clamp-3">
+                  {project.description}
+                </p>
+
+                {/* Tech Stack Badges */}
+                <div className="flex flex-wrap gap-1 md:gap-1.5 mb-1.5 md:mb-2">
+                  {project.tags.map((tag) => (
+                    <span 
+                      key={tag}
+                      className="text-[9px] md:text-[10px] font-mono px-1 md:px-1.5 py-0.5 rounded-md bg-[#000000] text-white border border-[#1A1A1A]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons Footer */}
+            <div className="p-3 md:p-4 lg:p-5 pt-0 flex items-center gap-1.5 md:gap-2 mt-1 md:mt-2">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-1 md:gap-1.5 px-2 py-1.5 md:px-3 md:py-1.5 rounded-lg bg-[#121212] hover:bg-[#1A1A1A] text-white border border-[#1A1A1A] hover:border-[#333333] text-[11px] md:text-xs font-semibold transition-all duration-300 min-h-[44px]"
+              >
+                <Github className="w-3.5 h-3.5" />
+                <span>Code</span>
+              </a>
+
+              {project.demo === "soon" ? (
+                <div className="flex-1 inline-flex items-center justify-center gap-1 md:gap-1.5 px-2 py-1.5 md:px-3 md:py-1.5 rounded-lg bg-[#0A0A0A] text-[#666666] border border-[#1A1A1A] text-[11px] md:text-xs font-medium cursor-not-allowed opacity-60 min-h-[44px]">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Soon</span>
+                </div>
+              ) : (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-1 md:gap-1.5 px-2 py-1.5 md:px-3 md:py-1.5 rounded-lg bg-[#121212] hover:bg-[#1A1A1A] text-white border border-[#1A1A1A] hover:border-[#333333] text-[11px] md:text-xs font-semibold transition-all duration-300 min-h-[44px]"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Demo</span>
+                </a>
+              )}
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );

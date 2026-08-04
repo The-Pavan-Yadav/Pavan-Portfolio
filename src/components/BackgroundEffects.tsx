@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 export const Starfield = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -9,102 +9,159 @@ export const Starfield = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    const stars: {x: number, y: number, r: number, a: number, v: number}[] = [];
-    const meteors: {x: number, y: number, l: number, v: number, a: number}[] = [];
+    // Mouse positions for smooth lerping
+    let targetMouseX = width / 2;
+    let targetMouseY = height / 2;
+    let currentMouseX = width / 2;
+    let currentMouseY = height / 2;
 
-    const isMobile = window.innerWidth < 768;
-    const starCount = isMobile ? 40 : 160;
+    const handleMouseMove = (e: MouseEvent) => {
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY;
+    };
 
-    // Initialize stars
-    for (let i = 0; i < starCount; i++) {
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    let time = 0;
+
+    // Stars
+    let stars: { x: number; y: number; size: number; alpha: number; twinkleSpeed: number; timeOffset: number }[] = [];
+    const initStars = () => {
+      stars = [];
+      const numStars = Math.floor((width * height) / 4000); // adjust density
+      for (let i = 0; i < numStars; i++) {
         stars.push({
-            x: Math.random() * w, 
-            y: Math.random() * h, 
-            r: Math.random() * 1.5, 
-            a: Math.random(), 
-            v: (Math.random() * 0.005) + 0.002
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.5 + 0.1,
+          twinkleSpeed: Math.random() * 0.02 + 0.01,
+          timeOffset: Math.random() * Math.PI * 2,
         });
-    }
+      }
+    };
+    initStars();
 
-    let animationFrame: number;
+    // Meteors
+    let meteors: { x: number; y: number; length: number; speed: number; angle: number; active: boolean; life: number; maxLife: number }[] = [];
+    const spawnMeteor = () => {
+      if (Math.random() < 0.003 && meteors.filter(m => m.active).length < 2) {
+        meteors.push({
+          x: Math.random() * width * 1.2,
+          y: -50,
+          length: Math.random() * 80 + 40,
+          speed: Math.random() * 15 + 10,
+          angle: (Math.PI / 180) * (Math.random() * 20 + 35), // angle of fall
+          active: true,
+          life: 0,
+          maxLife: Math.random() * 100 + 50,
+        });
+      }
+    };
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initStars();
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
 
     const render = () => {
-        ctx.clearRect(0, 0, w, h);
+      time += 0.05;
+
+      // Smooth interpolation for mouse position
+      currentMouseX += (targetMouseX - currentMouseX) * 0.06;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.06;
+
+      // Base background: completely matte dark
+      ctx.fillStyle = '#050505';
+      ctx.fillRect(0, 0, width, height);
+
+      const offsetX = (currentMouseX - width / 2) * 0.02;
+      const offsetY = (currentMouseY - height / 2) * 0.02;
+
+      // Draw faint dot grid (crosshair style)
+      const gridSize = 48;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      
+      for (let x = (offsetX % gridSize) - gridSize; x < width; x += gridSize) {
+        for (let y = (offsetY % gridSize) - gridSize; y < height; y += gridSize) {
+          ctx.fillRect(x, y, 2, 2);
+        }
+      }
+
+      // Draw Stars
+      stars.forEach(star => {
+        const twinkle = (Math.sin(time * star.twinkleSpeed + star.timeOffset) + 1) / 2;
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * (0.3 + 0.7 * twinkle)})`;
+        ctx.beginPath();
+        // Slight parallax for stars
+        let px = star.x + offsetX * 0.5;
+        let py = star.y + offsetY * 0.5;
+        // Wrap around
+        px = ((px % width) + width) % width;
+        py = ((py % height) + height) % height;
         
-        // Render stars
-        stars.forEach(star => {
-            star.a += star.v;
-            if (star.a > 1 || star.a < 0) star.v = -star.v;
-            
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.a) * 0.35})`;
-            
-            // Fast rectangle render for performance on mobile/all devices instead of expensive arc curves
-            if (star.r < 1.0) {
-                ctx.fillRect(star.x, star.y, 1.5, 1.5);
-            } else {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        });
+        ctx.arc(px, py, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-        // Generate meteors occasionally (disabled on mobile for 60fps feel)
-        if (!isMobile && Math.random() < 0.003 && meteors.length < 2) {
-            meteors.push({
-                x: Math.random() * w + w/2,
-                y: -50,
-                l: Math.random() * 100 + 50,
-                v: Math.random() * 10 + 10,
-                a: 0.6
-            });
+      // Draw Meteors
+      spawnMeteor();
+      meteors.forEach(meteor => {
+        if (!meteor.active) return;
+        meteor.x -= Math.cos(meteor.angle) * meteor.speed;
+        meteor.y += Math.sin(meteor.angle) * meteor.speed;
+        meteor.life++;
+
+        if (meteor.life >= meteor.maxLife || meteor.y > height || meteor.x < 0) {
+          meteor.active = false;
+          return;
         }
 
-        // Render meteors
-        if (!isMobile) {
-            for (let i = meteors.length - 1; i >= 0; i--) {
-                const m = meteors[i];
-                m.x -= m.v;
-                m.y += m.v;
-                m.a -= 0.01;
+        const grad = ctx.createLinearGradient(
+          meteor.x, meteor.y, 
+          meteor.x + Math.cos(meteor.angle) * meteor.length, 
+          meteor.y - Math.sin(meteor.angle) * meteor.length
+        );
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(0.1, 'rgba(255, 255, 255, 0.8)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
-                if (m.a <= 0 || m.x < -200 || m.y > h + 200) {
-                    meteors.splice(i, 1);
-                    continue;
-                }
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(meteor.x, meteor.y);
+        ctx.lineTo(
+          meteor.x + Math.cos(meteor.angle) * meteor.length,
+          meteor.y - Math.sin(meteor.angle) * meteor.length
+        );
+        ctx.stroke();
+      });
+      meteors = meteors.filter(m => m.active);
 
-                const grad = ctx.createLinearGradient(m.x, m.y, m.x + m.l, m.y - m.l);
-                grad.addColorStop(0, `rgba(255, 255, 255, ${m.a})`);
-                grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-                ctx.beginPath();
-                ctx.moveTo(m.x, m.y);
-                ctx.lineTo(m.x + m.l, m.y - m.l);
-                ctx.strokeStyle = grad;
-                ctx.lineWidth = 1;
-                ctx.lineCap = 'round';
-                ctx.stroke();
-            }
-        }
-
-        animationFrame = requestAnimationFrame(render);
+      animationFrameId = requestAnimationFrame(render);
     };
 
     render();
 
-    const handleResize = () => {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', handleResize);
-
     return () => {
-        cancelAnimationFrame(animationFrame);
-        window.removeEventListener('resize', handleResize);
-    }
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none mix-blend-screen opacity-70" />;
-}
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 z-0 pointer-events-none select-none w-full h-full"
+    />
+  );
+};
