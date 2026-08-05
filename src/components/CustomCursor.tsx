@@ -16,13 +16,17 @@ export const CustomCursor = () => {
   const ringTargetX = useMotionValue(-100);
   const ringTargetY = useMotionValue(-100);
 
+  // Fast spring for the inner dot to interpolate frames (buttery smooth 120fps feel)
+  const dotSpringConfig = { stiffness: 2500, damping: 100, mass: 0.05 };
+  const dotX = useSpring(mouseX, dotSpringConfig);
+  const dotY = useSpring(mouseY, dotSpringConfig);
+
   // Smooth spring physics for the trailing ring
-  // Higher stiffness and damping make it responsive while leaving a slight trail on fast movements
-  const springConfig = { damping: 28, stiffness: 600, mass: 0.2 };
+  const ringSpringConfig = { damping: 25, stiffness: 600, mass: 0.15 };
   
   // Use springs for the ring unless reduced motion is preferred
-  const ringX = useSpring(ringTargetX, springConfig);
-  const ringY = useSpring(ringTargetY, springConfig);
+  const ringX = useSpring(ringTargetX, ringSpringConfig);
+  const ringY = useSpring(ringTargetY, ringSpringConfig);
 
   useEffect(() => {
     // Check if device supports hover/fine pointer
@@ -118,12 +122,11 @@ export const CustomCursor = () => {
     <>
       {/* Outer Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-6 h-6 border-[1.5px] border-white rounded-full pointer-events-none z-[9998]"
+        className="fixed top-0 left-0 w-6 h-6 border-[1.5px] border-white rounded-full pointer-events-none z-[9998] -ml-3 -mt-3"
         style={{
           x: ringX,
           y: ringY,
-          translateX: '-50%',
-          translateY: '-50%',
+          willChange: 'transform'
         }}
         animate={{
           scale: isClicking ? 0.8 : isHovering ? 1.3 : 1,
@@ -137,12 +140,11 @@ export const CustomCursor = () => {
       
       {/* Center Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999]"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[9999] -ml-[3px] -mt-[3px]"
         style={{
-          x: mouseX,
-          y: mouseY,
-          translateX: '-50%',
-          translateY: '-50%',
+          x: dotX,
+          y: dotY,
+          willChange: 'transform'
         }}
         animate={{
           opacity: isVisible ? 1 : 0

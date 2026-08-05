@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
-import { Github, ExternalLink, Clock, MessageSquare, Activity, PenTool, Cloud, Gamepad2, Layers } from 'lucide-react';
+import { Github, ExternalLink, Clock, MessageSquare, Activity, PenTool, Cloud, Gamepad2, Layers, ArrowRight } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Project {
   title: string;
@@ -12,7 +13,7 @@ interface Project {
   previewId: string;
 }
 
-const ProjectPreview = ({ id }: { id: string }) => {
+export const ProjectPreview = ({ id }: { id: string }) => {
   switch (id) {
     case 'drift':
       return (
@@ -194,14 +195,14 @@ export const Projects = () => {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {projects.map((project, idx) => (
+        {projects.slice(0, 6).map((project, idx) => (
           <motion.div
             key={project.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1, ease: "easeOut" }}
-            className="bg-[#0A0A0A] border border-[#1A1A1A] hover:border-[#2563EB]/30 rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-300 group shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:shadow-[0_8px_24px_rgba(0,0,0,0.45)] hover:-translate-y-1"
+            className={`bg-[#0A0A0A] border border-[#1A1A1A] hover:border-[#2563EB]/30 rounded-xl overflow-hidden flex-col justify-between transition-all duration-300 group shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:shadow-[0_8px_24px_rgba(0,0,0,0.45)] hover:-translate-y-1 ${idx >= 3 ? 'hidden md:flex' : 'flex'}`}
           >
             <div>
               {/* Screenshot Container */}
@@ -278,6 +279,16 @@ export const Projects = () => {
             </div>
           </motion.div>
         ))}
+      </div>
+
+      <div className="mt-6 md:mt-8 flex justify-center">
+        <Link 
+          to="/projects"
+          className="group px-5 py-2 rounded-full border border-[#1F1F1F] bg-[#0A0A0A] hover:bg-[#121212] text-[10px] sm:text-xs text-[#64748B] hover:text-[#F8FAFC] tracking-[0.2em] uppercase font-mono flex items-center gap-3 transition-all duration-300 hover:border-[#333333]"
+        >
+          <span>View All Projects</span>
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#64748B] group-hover:text-[#F8FAFC] group-hover:translate-x-1 transition-all duration-300" />
+        </Link>
       </div>
     </section>
   );

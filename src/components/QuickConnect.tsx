@@ -60,7 +60,7 @@ export const QuickConnect = () => {
               transition: { staggerChildren: 0.1 }
             }
           }}
-          className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 w-full max-w-4xl px-4"
+          className="flex flex-wrap justify-center gap-2.5 sm:gap-6 md:gap-8 w-full max-w-4xl px-2 sm:px-4"
         >
           {links.map((link) => {
             const Icon = link.icon;
@@ -74,12 +74,12 @@ export const QuickConnect = () => {
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
                 }}
-                className="group relative flex flex-col items-center justify-center w-[80px] h-[80px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] bg-[#090909] rounded-[16px] md:rounded-[20px] border border-white/[0.04] hover:border-white/[0.08] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_20px_rgba(255,255,255,0.02)] cursor-pointer"
+                className="group relative flex flex-col items-center justify-center w-[65px] h-[65px] min-[380px]:w-[70px] min-[380px]:h-[70px] sm:w-[90px] sm:h-[90px] md:w-[100px] md:h-[100px] bg-[#090909] rounded-[12px] sm:rounded-[16px] md:rounded-[20px] border border-white/[0.04] hover:border-white/[0.08] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_20px_rgba(255,255,255,0.02)] cursor-pointer"
               >
-                <div className="text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors duration-300 mb-2 sm:mb-3">
-                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transform transition-transform duration-300 group-hover:scale-[1.08]" strokeWidth={1.5} />
+                <div className="text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors duration-300 mb-1 min-[380px]:mb-1.5 sm:mb-3">
+                  <Icon className="w-4 h-4 min-[380px]:w-5 min-[380px]:h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 transform transition-transform duration-300 group-hover:scale-[1.08]" strokeWidth={1.5} />
                 </div>
-                <span className="text-[10px] sm:text-xs font-medium text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors duration-300">
+                <span className="text-[8px] min-[380px]:text-[9px] sm:text-xs font-medium text-[#94A3B8] group-hover:text-[#F8FAFC] transition-colors duration-300">
                   {link.name}
                 </span>
               </motion.a>

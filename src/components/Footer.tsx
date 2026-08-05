@@ -162,10 +162,10 @@ export const Footer = () => {
       </motion.div>
       
       <div className="absolute bottom-8 left-0 right-0 text-center flex flex-col items-center gap-1">
-        <p className="text-[#64748B] text-xs font-mono opacity-50">
+        <p className="text-[#64748B] text-[10px] md:text-xs font-mono opacity-50">
           Designed & Built with ❤️ by Pavan Yadav
         </p>
-        <p className="text-[#64748B] text-xs font-mono opacity-50">
+        <p className="text-[#64748B] text-[10px] md:text-xs font-mono opacity-50">
           © 2026 Pavan Yadav. All rights reserved.
         </p>
       </div>

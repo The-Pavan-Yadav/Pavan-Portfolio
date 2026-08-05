@@ -45,9 +45,9 @@ export const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-[10px] sm:text-[11px] md:text-[13px] text-[#94A3B8] tracking-[0.15em] font-mono flex items-center justify-center max-w-2xl px-4 min-h-[1.5rem]"
+          className="text-[8px] min-[380px]:text-[9px] sm:text-[11px] md:text-[13px] text-[#94A3B8] tracking-[0.05em] sm:tracking-[0.15em] font-mono flex items-center justify-center w-full max-w-full px-2 sm:px-4 min-h-[1.5rem] leading-[1.6] sm:leading-normal"
         >
-          <span className="text-center inline-flex items-center flex-wrap justify-center">
+          <span className="text-center inline-flex items-center flex-wrap justify-center whitespace-normal break-words">
             {displayedText}
             <span 
               className={`inline-block w-[0.5em] h-[1.2em] bg-[#64748B] ml-1.5 align-middle ${
