@@ -13,18 +13,41 @@ export const Starfield = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Mouse positions for smooth lerping
+    // Mouse/Gyro positions for smooth lerping
     let targetMouseX = width / 2;
     let targetMouseY = height / 2;
     let currentMouseX = width / 2;
     let currentMouseY = height / 2;
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (prefersReducedMotion) return;
       targetMouseX = e.clientX;
       targetMouseY = e.clientY;
     };
+    
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (prefersReducedMotion) return;
+      if (e.gamma === null || e.beta === null) return;
+      
+      // gamma is left/right (-90 to 90)
+      // beta is front/back (-180 to 180), usually ~45 when holding device
+      const gamma = e.gamma;
+      const beta = e.beta - 45; 
+      
+      const maxTilt = 30;
+      const clampedX = Math.max(-maxTilt, Math.min(maxTilt, gamma));
+      const clampedY = Math.max(-maxTilt, Math.min(maxTilt, beta));
+      
+      // Scale tilt to a subtle pixel shift. 
+      // maxTilt degrees -> max pixel shift of width/2 and height/2 (same as mouse)
+      targetMouseX = (width / 2) + (clampedX / maxTilt) * (width / 2);
+      targetMouseY = (height / 2) + (clampedY / maxTilt) * (height / 2);
+    };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
 
     let time = 0;
 
@@ -153,6 +176,7 @@ export const Starfield = () => {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
