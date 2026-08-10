@@ -40,10 +40,9 @@ export const Starfield = () => {
       const clampedX = Math.max(-maxTilt, Math.min(maxTilt, gamma));
       const clampedY = Math.max(-maxTilt, Math.min(maxTilt, beta));
       
-      // Scale tilt to a subtle pixel shift. 
-      // maxTilt degrees -> max pixel shift of width/2 and height/2 (same as mouse)
-      targetMouseX = (width / 2) + (clampedX / maxTilt) * (width / 2);
-      targetMouseY = (height / 2) + (clampedY / maxTilt) * (height / 2);
+      // Scale tilt to a noticeable pixel shift (max ~20px star movement)
+      targetMouseX = (width / 2) + (clampedX / maxTilt) * 2000;
+      targetMouseY = (height / 2) + (clampedY / maxTilt) * 2000;
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
