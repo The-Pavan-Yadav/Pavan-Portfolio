@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { Skills } from './components/Skills';
 import { Projects } from './components/Projects';
+import { Certificates } from './components/Certificates';
 import { AllProjects } from './components/AllProjects';
 import { GithubActivity } from './components/GithubActivity';
 import { Contact } from './components/Contact';
@@ -19,6 +20,7 @@ function Home() {
       <About />
       <Skills />
       <Projects />
+      <Certificates />
       <GithubActivity />
       <Contact />
       <QuickConnect />
