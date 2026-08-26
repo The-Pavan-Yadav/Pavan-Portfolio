@@ -6,6 +6,7 @@ import { Skills } from './components/Skills';
 import { Projects } from './components/Projects';
 import { Certificates } from './components/Certificates';
 import { AllProjects } from './components/AllProjects';
+import { AllCertificates } from './components/AllCertificates';
 import { GithubActivity } from './components/GithubActivity';
 import { Contact } from './components/Contact';
 import { QuickConnect } from './components/QuickConnect';
@@ -39,6 +40,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<AllProjects />} />
+        <Route path="/certificates" element={<AllCertificates />} />
       </Routes>
     </div>
   );

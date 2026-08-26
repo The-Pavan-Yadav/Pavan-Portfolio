@@ -33,7 +33,7 @@ export const GithubActivity = () => {
           }));
         }
       })
-      .catch(err => console.error("Error fetching GitHub stats", err));
+      .catch(err => console.warn("Could not fetch GitHub stats (rate limited or network error):", err.message));
   }, []);
 
   const statCards = [

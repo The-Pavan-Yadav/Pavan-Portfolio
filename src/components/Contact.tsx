@@ -72,7 +72,7 @@ export const Contact = () => {
         >
           <div>
             <span className="text-[#64748B] font-mono text-[10px] md:text-xs font-semibold tracking-wider uppercase block mb-2 md:mb-4">
-              04. Contact
+              05. Contact
             </span>
             <h2 className="text-[2rem] leading-none md:text-6xl font-bold text-[#F8FAFC] tracking-tight mb-4 md:mb-6">
               Get In Touch
