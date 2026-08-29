@@ -86,9 +86,15 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
     const handleResize = () => {
       // Calculate responsive width with some padding
       const isMobile = window.innerWidth < 768;
-      const padding = isMobile ? 32 : 96; 
+      const padding = 96; 
       const maxWidth = 800;
-      setPdfWidth(Math.min(window.innerWidth - padding, maxWidth));
+      
+      if (isMobile) {
+        // Render high-res on mobile to preserve sharpness; CSS handles visual scaling
+        setPdfWidth(maxWidth);
+      } else {
+        setPdfWidth(Math.min(window.innerWidth - padding, maxWidth));
+      }
     };
 
     handleResize(); // Initial setup
@@ -289,53 +295,53 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-4xl h-[85vh] bg-[#0A0A0A] border border-[#1F1F1F] rounded-xl flex flex-col overflow-hidden shadow-2xl"
+              className="relative w-full max-w-4xl max-md:h-fit max-md:max-h-[85vh] md:h-[85vh] bg-[#0A0A0A] border border-[#1F1F1F] rounded-xl flex flex-col overflow-hidden shadow-2xl"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-3 md:p-4 border-b border-[#1F1F1F] bg-[#050505]">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between p-2 md:p-4 border-b border-[#1F1F1F] bg-[#050505]">
+                <div className="flex items-center gap-2 md:gap-3">
                   {selectedCert.id === "cert-isro" ? (
-                    <IsroIcon className="w-5 h-5" />
+                    <IsroIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-google-ai" || selectedCert.id === "cert-google-gen-ai" ? (
-                    <GoogleIcon className="w-5 h-5" />
+                    <GoogleIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-1" ? (
-                    <StanfordIcon className="w-5 h-5" />
+                    <StanfordIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-matlab" ? (
-                    <MatlabIcon className="w-5 h-5" />
+                    <MatlabIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-fortinet" ? (
-                    <FortinetIcon className="w-5 h-5" />
+                    <FortinetIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : (
-                    <Award className="w-5 h-5 text-[#3B82F6]" />
+                    <Award className="w-4 h-4 md:w-5 md:h-5 text-[#3B82F6] shrink-0" />
                   )}
-                  <div>
-                    <h3 className="text-[#F8FAFC] font-semibold text-sm md:text-base leading-tight">
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-[#F8FAFC] font-semibold text-[11px] sm:text-xs md:text-base leading-tight line-clamp-1 md:line-clamp-none">
                       {selectedCert.title}
                     </h3>
-                    <p className="text-[#64748B] text-xs">
+                    <p className="text-[#64748B] text-[9px] sm:text-[10px] md:text-xs mt-0.5 md:mt-0 line-clamp-1 md:line-clamp-none">
                       {selectedCert.organization} • {selectedCert.date}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2 ml-2 shrink-0">
                   <a
                     href={selectedCert.url}
                     download
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#121212] hover:bg-[#1A1A1A] text-white border border-[#1A1A1A] hover:border-[#333333] text-[10px] md:text-xs font-semibold transition-all duration-300"
+                    className="inline-flex items-center justify-center gap-1 md:gap-1.5 px-2 py-1.5 md:px-3 md:py-1.5 rounded-lg bg-[#121212] hover:bg-[#1A1A1A] text-white border border-[#1A1A1A] hover:border-[#333333] text-[10px] md:text-xs font-semibold transition-all duration-300"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <Download className="w-3 h-3 md:w-3.5 md:h-3.5" />
                     <span className="hidden sm:inline">Download</span>
                   </a>
                   <button
                     onClick={() => setSelectedCert(null)}
-                    className="p-1.5 rounded-lg hover:bg-[#1A1A1A] text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
+                    className="p-1 md:p-1.5 rounded-lg hover:bg-[#1A1A1A] text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
               </div>
               
               {/* Modal Body / PDF Viewer */}
-              <div className="flex-1 bg-[#121212] w-full h-full relative overflow-auto flex items-center justify-center py-6 px-2 md:p-8">
+              <div className="flex-1 bg-[#121212] w-full max-md:h-fit md:h-full relative overflow-auto flex items-center justify-center max-md:p-2 md:p-8">
                 <Document
                   file={selectedCert.url}
                   loading={

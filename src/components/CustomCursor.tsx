@@ -49,22 +49,8 @@ export const CustomCursor = () => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       
-      if (hoveredElementRef.current) {
-        const rect = hoveredElementRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        // Calculate distance from center
-        const distanceX = e.clientX - centerX;
-        const distanceY = e.clientY - centerY;
-        
-        // Subtle magnetic pull (pulls ring 40% towards the center of the element)
-        ringTargetX.set(centerX + distanceX * 0.6);
-        ringTargetY.set(centerY + distanceY * 0.6);
-      } else {
-        ringTargetX.set(e.clientX);
-        ringTargetY.set(e.clientY);
-      }
+      ringTargetX.set(e.clientX);
+      ringTargetY.set(e.clientY);
       
       if (!isVisible) setIsVisible(true);
     };

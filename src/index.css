@@ -55,14 +55,7 @@ body {
 }
 
 @media (pointer: fine) {
-  body, 
-  a, 
-  button, 
-  input, 
-  textarea, 
-  select, 
-  [role="button"],
-  .group {
+  *, *::before, *::after {
     cursor: none !important;
   }
 }

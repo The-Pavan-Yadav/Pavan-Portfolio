@@ -10,7 +10,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'about', 'projects', 'skills', 'contact'];
+      const sections = ['hero', 'about', 'projects', 'skills', 'certificates', 'contact'];
       let current = 'hero';
       for (const section of sections) {
         const el = document.getElementById(section);
@@ -108,7 +108,7 @@ export const Navbar = () => {
             className="fixed top-[72px] left-4 right-4 z-40 md:hidden pointer-events-auto"
           >
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-2xl p-2 shadow-2xl flex flex-col space-y-1">
-              {[...navLinks, { name: 'Contact', href: '#contact' }].map((link) => {
+              {[...navLinks, { name: 'Certificates', href: '#certificates' }, { name: 'Contact', href: '#contact' }].map((link) => {
                 const sectionId = link.href.replace('#', '');
                 const isActive = activeSection === sectionId;
                 return (

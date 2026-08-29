@@ -284,10 +284,10 @@ export const Projects = () => {
       <div className="mt-6 md:mt-8 flex justify-center">
         <Link 
           to="/projects"
-          className="group px-5 py-2 rounded-full border border-[#1F1F1F] bg-[#0A0A0A] hover:bg-[#121212] text-[10px] sm:text-xs text-[#64748B] hover:text-[#F8FAFC] tracking-[0.2em] uppercase font-mono flex items-center gap-3 transition-all duration-300 hover:border-[#333333]"
+          className="group px-3 py-1.5 sm:px-5 sm:py-2 rounded-full border border-[#1F1F1F] bg-[#0A0A0A] hover:bg-[#121212] text-[9px] sm:text-xs text-[#64748B] hover:text-[#F8FAFC] tracking-wider sm:tracking-[0.2em] uppercase font-mono flex items-center gap-2 sm:gap-3 transition-all duration-300 hover:border-[#333333]"
         >
           <span>View All Projects</span>
-          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#64748B] group-hover:text-[#F8FAFC] group-hover:translate-x-1 transition-all duration-300" />
+          <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-[#64748B] group-hover:text-[#F8FAFC] group-hover:translate-x-1 transition-all duration-300" />
         </Link>
       </div>
     </section>
