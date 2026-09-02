@@ -14,18 +14,18 @@ const GoogleIcon = ({ className }: { className?: string }) => (
 );
 
 const IsroIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg className={className} viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <text 
-      x="16" 
-      y="16" 
+      x="24" 
+      y="12" 
       dy=".1em"
       fill="#E0F2FE" 
-      fontSize="10" 
+      fontSize="16" 
       fontWeight="900" 
       fontFamily="system-ui, sans-serif" 
       textAnchor="middle" 
       dominantBaseline="middle"
-      letterSpacing="0.5"
+      letterSpacing="1"
     >
       ISRO
     </text>
@@ -155,6 +155,15 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
       date: "Aug 2026",
       url: "/certificates/MATLAB Onramp certificate.pdf",
       skill: "MATLAB Coding"
+    },
+    {
+      id: "cert-isro-aerosols",
+      title: "Aerosols: Measurement, Retrieval and Impacts",
+      organization: "Indian Institute of Remote Sensing (IIRS), Indian Space Research Organization (ISRO)",
+      date: "Jul 2026",
+      url: "/certificates/Aerosols.pdf",
+      credentialId: "IaphMKf&SS",
+      skill: "Aerosol Science"
     }
   ];
 
@@ -195,7 +204,7 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
 
       {/* Certificates Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 xl:gap-8 max-w-[1000px] mx-auto auto-rows-fr">
-        {certificates.map((cert, idx) => (
+        {(isArchive ? certificates : certificates.filter(c => c.id !== "cert-matlab")).map((cert, idx) => (
           <motion.div
             key={cert.id}
             initial={{ opacity: 0, y: 20 }}
@@ -206,8 +215,8 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
           >
             <div>
               <div className="mb-3">
-                {cert.id === "cert-isro" ? (
-                  <IsroIcon className="w-5 h-5 md:w-7 md:h-7 grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
+                {cert.id === "cert-isro" || cert.id === "cert-isro-aerosols" ? (
+                  <IsroIcon className="h-5 w-auto md:h-7 grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
                 ) : cert.id === "cert-google-ai" || cert.id === "cert-google-gen-ai" ? (
                   <GoogleIcon className="w-5 h-5 md:w-7 md:h-7 grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" />
                 ) : cert.id === "cert-1" ? (
@@ -300,8 +309,8 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
               {/* Modal Header */}
               <div className="flex items-center justify-between p-2 md:p-4 border-b border-[#1F1F1F] bg-[#050505]">
                 <div className="flex items-center gap-2 md:gap-3">
-                  {selectedCert.id === "cert-isro" ? (
-                    <IsroIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
+                  {selectedCert.id === "cert-isro" || selectedCert.id === "cert-isro-aerosols" ? (
+                    <IsroIcon className="h-4 w-auto md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-google-ai" || selectedCert.id === "cert-google-gen-ai" ? (
                     <GoogleIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                   ) : selectedCert.id === "cert-1" ? (
