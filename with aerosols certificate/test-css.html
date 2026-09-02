@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  .modal-body {
+    width: 300px;
+    height: 400px;
+    background: #333;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+  }
+  .react-pdf__Page {
+    /* inline styles set by react-pdf */
+    width: 600px;
+    height: 800px;
+  }
+  .react-pdf__Page canvas {
+    /* inline styles set by react-pdf */
+    width: 600px !important;
+    height: 800px !important;
+  }
+  
+  /* Our overrides for mobile */
+  @media (max-width: 767px) {
+    .react-pdf__Page {
+      width: auto !important;
+      height: auto !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+    }
+    .react-pdf__Page canvas {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="modal-body">
+    <div class="react-pdf__Page">
+      <canvas></canvas>
+    </div>
+  </div>
+</body>
+</html>
