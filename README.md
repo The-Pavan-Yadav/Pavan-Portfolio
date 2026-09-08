@@ -32,6 +32,7 @@ GitHub integration LinkedIn profile Email contact Instagram profile Direct commu
 
 React TypeScript Tailwind CSS HTML5 CSS3 JavaScript
 
+
 Backend
 
 Node.js Express.js REST APIs
