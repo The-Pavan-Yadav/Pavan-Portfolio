@@ -1,6 +1,6 @@
 🚀 Pavan Portfolio A modern, futuristic, and fully responsive personal portfolio website showcasing my projects, skills, achievements, and passion for technology. 🌟 Overview Welcome to my digital portfolio! This website represents my journey as a developer, creator, and technology enthusiast. Built with a strong focus on performance, user experience, and modern design principles, the portfolio serves as a central hub for my work, achievements, and professional presence. The website features a sleek cyber-inspired interface, smooth animations, interactive skill visualizations, project showcases, responsive layouts, and multiple ways to connect with me.
 
-✨ Features 🎨 Modern UI/UX
+✨ Features 🎨 Modern UI/UX.
 
 
 Futuristic cyber-inspired design Dark theme with glowing accents Smooth transitions and animations Interactive visual effects Mobile-first responsive layout
@@ -9,7 +9,7 @@ Futuristic cyber-inspired design Dark theme with glowing accents Smooth transiti
 
 Personal introduction Career goals and aspirations Technology interests Development journey
 
-🛠 Skills Matrix
+🛠 Skills Matrix/
 
 Interactive skill cards Frontend technologies Backend technologies AI and Machine Learning tools Development tools and workflows Dynamic power-level indicators
 
