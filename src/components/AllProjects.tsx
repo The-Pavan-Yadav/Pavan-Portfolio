@@ -38,6 +38,15 @@ export const AllProjects = () => {
       demo: "soon"
     },
     {
+      title: "United Medication",
+      description: "A connected digital healthcare platform designed to bring patients, doctors, hospitals, and caregivers together through a unified healthcare experience. It helps organize patient medical records, healthcare information, appointments, and care interactions in one synchronized platform.",
+      tags: ["React", "Firebase", "TypeScript", "Tailwind CSS"],
+      previewId: "united-medication",
+      status: "Live",
+      github: "https://github.com/The-Pavan-Yadav/MediNexa",
+      demo: "https://medi-nexa.vercel.app/"
+    },
+    {
       title: "Weather App",
       description: "Realtime meteorological forecasting application with location search, dynamic metric indicators, and clean data visualizations.",
       tags: ["React", "REST API", "Tailwind CSS"],
@@ -60,7 +69,7 @@ export const AllProjects = () => {
       description: "Multiplayer tactical strategy game featuring realtime socket communication and interactive turn-based board mechanics.",
       tags: ["Node.js", "WebSockets", "JavaScript"],
       previewId: "chain",
-      status: "Beta",
+      status: "Soon",
       github: "https://github.com/niharikaveeram18/Chain-Reaction-game",
       demo: "soon"
     }

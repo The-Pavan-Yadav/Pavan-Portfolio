@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Github, ExternalLink, Clock, MessageSquare, Activity, PenTool, Cloud, Gamepad2, Layers, ArrowRight } from 'lucide-react';
+import { Github, ExternalLink, Clock, MessageSquare, Activity, PenTool, Cloud, Gamepad2, Layers, ArrowRight, HeartPulse } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ interface Project {
   title: string;
   description: string;
   tags: string[];
-  status: 'Live' | 'In Progress' | 'Beta';
+  status: 'Live' | 'In Progress' | 'Beta' | 'Soon';
   github: string;
   demo: string;
   previewId: string;
@@ -112,6 +112,35 @@ export const ProjectPreview = ({ id }: { id: string }) => {
           </div>
         </div>
       );
+    case 'united-medication':
+      return (
+        <div className="w-full h-full bg-[#050505] flex items-center justify-center p-4">
+          <div className="w-full max-w-[210px] h-[120px] bg-[#0A0A0A] rounded-lg border border-[#1A1A1A] shadow-[0_4px_12px_rgba(0,0,0,0.5)] p-3 flex flex-col justify-between relative overflow-hidden">
+            <div className="flex justify-between items-center z-10">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_6px_rgba(16,185,129,0.5)]"></div>
+                <div className="w-14 h-2 bg-[#1A1A1A] rounded-full"></div>
+              </div>
+              <HeartPulse className="w-4 h-4 text-[#3B82F6]/60" />
+            </div>
+            <div className="flex items-center justify-between gap-2 z-10 my-auto">
+              <div className="flex-1 bg-[#121212] border border-[#1A1A1A] rounded p-1.5 flex flex-col gap-1">
+                <div className="w-8 h-1.5 bg-[#3B82F6]/40 rounded-full"></div>
+                <div className="w-12 h-1 bg-[#1A1A1A] rounded-full"></div>
+              </div>
+              <div className="flex-1 bg-[#121212] border border-[#1A1A1A] rounded p-1.5 flex flex-col gap-1">
+                <div className="w-10 h-1.5 bg-emerald-500/30 rounded-full"></div>
+                <div className="w-7 h-1 bg-[#1A1A1A] rounded-full"></div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between text-[9px] font-mono text-[#64748B] z-10 border-t border-[#1A1A1A] pt-1">
+              <span className="text-[#3B82F6]/70">SYNCED</span>
+              <span>24/7 CARE</span>
+            </div>
+            <Activity className="absolute -bottom-2 -right-2 w-20 h-20 text-[#3B82F6]/5 -z-0 transform rotate-6 pointer-events-none" />
+          </div>
+        </div>
+      );
     default:
       return <div className="w-full h-full bg-[#050505]"></div>;
   }
@@ -147,6 +176,15 @@ export const Projects = () => {
       demo: "soon"
     },
     {
+      title: "United Medication",
+      description: "A connected digital healthcare platform designed to bring patients, doctors, hospitals, and caregivers together through a unified healthcare experience. It helps organize patient medical records, healthcare information, appointments, and care interactions in one synchronized platform.",
+      tags: ["React", "Firebase", "TypeScript", "Tailwind CSS"],
+      previewId: "united-medication",
+      status: "Live",
+      github: "https://github.com/The-Pavan-Yadav/MediNexa",
+      demo: "https://medi-nexa.vercel.app/"
+    },
+    {
       title: "Weather App",
       description: "Realtime meteorological forecasting application with location search, dynamic metric indicators, and clean data visualizations.",
       tags: ["React", "REST API", "Tailwind CSS"],
@@ -169,7 +207,7 @@ export const Projects = () => {
       description: "Multiplayer tactical strategy game featuring realtime socket communication and interactive turn-based board mechanics.",
       tags: ["Node.js", "WebSockets", "JavaScript"],
       previewId: "chain",
-      status: "Beta",
+      status: "Soon",
       github: "https://github.com/niharikaveeram18/Chain-Reaction-game",
       demo: "soon"
     }
@@ -195,14 +233,14 @@ export const Projects = () => {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        {projects.slice(0, 6).map((project, idx) => (
+        {projects.filter(p => p.title !== "Chain Reaction").map((project, idx) => (
           <motion.div
             key={project.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1, ease: "easeOut" }}
-            className={`bg-[#0A0A0A] border border-[#1A1A1A] hover:border-[#2563EB]/30 rounded-xl overflow-hidden flex-col justify-between transition-all duration-300 group shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:shadow-[0_8px_24px_rgba(0,0,0,0.45)] hover:-translate-y-1 ${idx >= 3 ? 'hidden md:flex' : 'flex'}`}
+            className="bg-[#0A0A0A] border border-[#1A1A1A] hover:border-[#2563EB]/30 rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-300 group shadow-[0_4px_16px_rgba(0,0,0,0.3)] md:shadow-[0_8px_24px_rgba(0,0,0,0.45)] hover:-translate-y-1"
           >
             <div>
               {/* Screenshot Container */}
