@@ -49,7 +49,7 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-32 relative w-[90%] md:w-full mx-auto">
+    <section id="contact" className="py-16 md:py-32 relative w-[90%] md:w-full mx-auto scroll-mt-16 md:scroll-mt-24">
       <Toaster 
         position="bottom-center"
         toastOptions={{

@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 
 export const About = () => {
   return (
-    <section id="about" className="py-24 md:py-32 relative">
+    <section id="about" className="py-24 md:py-32 relative scroll-mt-16 md:scroll-mt-24">
       {/* Header */}
       <div className="mb-16 lg:mb-20">
         {/* 01. Line */}

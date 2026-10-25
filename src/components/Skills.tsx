@@ -61,7 +61,7 @@ const skillCategories = [
 
 export const Skills = () => {
   return (
-    <section id="skills" className="py-10 md:py-20 relative w-[90%] md:w-full mx-auto">
+    <section id="skills" className="py-10 md:py-20 relative w-[90%] md:w-full mx-auto scroll-mt-16 md:scroll-mt-24">
       <div className="mb-6 md:mb-14">
         {/* 02. Line */}
         <div className="flex items-center gap-4 mb-3">

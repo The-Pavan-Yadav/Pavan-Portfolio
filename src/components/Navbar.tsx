@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
@@ -10,11 +10,11 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'about', 'projects', 'skills', 'certificates', 'contact'];
+      const sections = ['hero', 'about', 'skills', 'projects', 'certificates', 'contact'];
       let current = 'hero';
       for (const section of sections) {
         const el = document.getElementById(section);
-        if (el && window.scrollY >= el.offsetTop - 300) {
+        if (el && window.scrollY >= el.offsetTop - 250) {
           current = section;
         }
       }
@@ -22,10 +22,11 @@ export const Navbar = () => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (location.pathname === '/projects') {
+  if (location.pathname === '/projects' || location.pathname === '/certificates') {
     return null;
   }
 
@@ -33,7 +34,23 @@ export const Navbar = () => {
     { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
     { name: 'Projects', href: '#projects' },
+    { name: 'Certificates', href: '#certificates' },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsMobileMenuOpen(false);
+    if (location.pathname !== '/') {
+      return;
+    }
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+      setActiveSection(targetId);
+    }
+  };
 
   return (
     <>
@@ -47,6 +64,7 @@ export const Navbar = () => {
           {/* Logo */}
           <a 
             href="#hero" 
+            onClick={(e) => handleNavClick(e, '#hero')}
             className="flex items-center justify-center w-10 h-10 md:w-8 md:h-8 rounded-full hover:bg-[#1A1A1A] transition-colors ml-1"
           >
             <span className="font-sans text-[15px] md:text-[13px] font-bold tracking-tight text-[#F8FAFC]">P.</span>
@@ -64,6 +82,7 @@ export const Navbar = () => {
                 <a
                   key={link.name}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={`px-4 py-1.5 text-[13px] font-medium rounded-full transition-all duration-300 ${
                     isActive 
                       ? 'text-[#F8FAFC] bg-[#1A1A1A]' 
@@ -81,7 +100,12 @@ export const Navbar = () => {
 
           <a
             href="#contact"
-            className="hidden md:flex px-4 py-1.5 text-[13px] font-medium text-[#F8FAFC] hover:bg-[#1A1A1A] rounded-full transition-all mr-1"
+            onClick={(e) => handleNavClick(e, '#contact')}
+            className={`hidden md:flex px-4 py-1.5 text-[13px] font-medium rounded-full transition-all mr-1 ${
+              activeSection === 'contact'
+                ? 'text-[#F8FAFC] bg-[#1A1A1A]'
+                : 'text-[#F8FAFC] hover:bg-[#1A1A1A]'
+            }`}
           >
             Contact
           </a>
@@ -108,14 +132,20 @@ export const Navbar = () => {
             className="fixed top-[72px] left-4 right-4 z-40 md:hidden pointer-events-auto"
           >
             <div className="bg-[#0A0A0A] border border-[#1F1F1F] rounded-2xl p-2 shadow-2xl flex flex-col space-y-1">
-              {[...navLinks, { name: 'Certificates', href: '#certificates' }, { name: 'Contact', href: '#contact' }].map((link) => {
+              {[
+                { name: 'About', href: '#about' },
+                { name: 'Skills', href: '#skills' },
+                { name: 'Projects', href: '#projects' },
+                { name: 'Certificates', href: '#certificates' },
+                { name: 'Contact', href: '#contact' },
+              ].map((link) => {
                 const sectionId = link.href.replace('#', '');
                 const isActive = activeSection === sectionId;
                 return (
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, link.href)}
                     className={`px-5 py-4 text-base font-medium rounded-xl transition-all duration-300 ${
                       isActive 
                         ? 'text-[#F8FAFC] bg-[#1A1A1A]' 

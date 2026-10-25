@@ -275,7 +275,7 @@ export const Certificates = ({ isArchive = false }: { isArchive?: boolean }) => 
   ];
 
   return (
-    <section id="certificates" className="py-12 md:py-24 lg:py-32 relative w-[90%] md:w-full mx-auto">
+    <section id="certificates" className="py-12 md:py-24 lg:py-32 relative w-[90%] md:w-full mx-auto scroll-mt-16 md:scroll-mt-24">
       {/* Section Header */}
       {isArchive ? (
         <div className="mb-10 pt-12 md:pt-24">
